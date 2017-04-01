@@ -30,8 +30,26 @@ public class UploadImageActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        imageView.setImageBitmap(myBitmap);
-        String asdf = "";
 
+        int maxWidth = 333;
+        int maxHeight = 400;
+
+        int heightDiff = myBitmap.getHeight() / maxHeight;
+        int widthDiff = myBitmap.getWidth() / maxWidth;
+
+        Bitmap scaledImage = null;
+
+        if (heightDiff > widthDiff)
+        {
+            scaledImage = Bitmap.createScaledBitmap(myBitmap, myBitmap.getWidth() / heightDiff,
+                    myBitmap.getHeight() / heightDiff, false);
+        }
+        else
+        {
+            scaledImage = Bitmap.createScaledBitmap(myBitmap, myBitmap.getWidth() / widthDiff,
+                    myBitmap.getHeight() / widthDiff, false);
+        }
+
+        imageView.setImageBitmap(scaledImage);
     }
 }
