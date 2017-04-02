@@ -34,7 +34,7 @@ public class DisplayImageActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     new DownloadImageTask((ImageView) findViewById(R.id.imageView))
-                            .execute("http://i3.kym-cdn.com/entries/icons/square/000/000/774/lime-cat.jpg");
+                            .execute(Constants.ImageUrl);
                 }
 
                 @Override

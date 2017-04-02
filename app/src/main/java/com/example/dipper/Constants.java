@@ -10,5 +10,5 @@ public class Constants {
     public static final String GetCheckins = "GetCheckins";
     public static final String Action = "Action";
     public static final String Result = "Result";
-    public static final int MaxApiRetries = 3;
+    public static final String ImageUrl = "http://52.41.79.4/image.jpg";
 }
