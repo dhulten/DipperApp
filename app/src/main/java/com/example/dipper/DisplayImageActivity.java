@@ -9,17 +9,41 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestHandle;
 
 import java.io.InputStream;
+
+import cz.msebera.android.httpclient.Header;
 
 public class DisplayImageActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_display_image);
-        new DownloadImageTask((ImageView) findViewById(R.id.imageView))
-            .execute("http://i3.kym-cdn.com/entries/icons/square/000/000/774/lime-cat.jpg");
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader(Constants.Action, Constants.Checkin);
+
+        client.post(Constants.ApiUrl, null, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    new DownloadImageTask((ImageView) findViewById(R.id.imageView))
+                            .execute("http://i3.kym-cdn.com/entries/icons/square/000/000/774/lime-cat.jpg");
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    findViewById(R.id.errorMessage1).setVisibility(View.VISIBLE);
+                    findViewById(R.id.errorMessage2).setVisibility(View.VISIBLE);
+                    findViewById(R.id.imageView).setVisibility(View.INVISIBLE);
+                }
+        });
     }
 
     public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
