@@ -15,6 +15,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestHandle;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import cz.msebera.android.httpclient.Header;
@@ -33,8 +35,34 @@ public class DisplayImageActivity extends AppCompatActivity {
         client.post(Constants.ApiUrl, null, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    new DownloadImageTask((ImageView) findViewById(R.id.imageView))
-                            .execute(Constants.ImageUrl);
+                    findViewById(R.id.imageView).setVisibility(View.VISIBLE);
+
+                    File cacheDir = getApplicationContext().getCacheDir();
+                    File cachedImage = new File(cacheDir.getPath() + Constants.LocalImageName);
+
+                    boolean newImage = false;
+
+                    for (Header h : headers)
+                    {
+                        if (h.getName().equals(Constants.Result) && h.getValue().equals("True"))
+                        {
+                            newImage = true;
+                            break;
+                        }
+                    }
+
+                    if (!cachedImage.exists() || newImage)
+                    {
+                        new DownloadImageTask((ImageView) findViewById(R.id.imageView))
+                                .execute(Constants.ImageUrl);
+                    }
+                    else
+                    {
+
+                        Bitmap image = BitmapFactory.decodeFile(cachedImage.getAbsolutePath());
+                        ImageView imageView = (ImageView)findViewById(R.id.imageView);
+                        imageView.setImageBitmap(image);
+                    }
                 }
 
                 @Override
@@ -86,6 +114,22 @@ public class DisplayImageActivity extends AppCompatActivity {
 
             // set image url
             bmImage.setImageBitmap(result);
+
+            File cacheDir = getApplicationContext().getCacheDir();
+            File newImage = new File(cacheDir.getPath() + Constants.LocalImageName);
+            if (newImage.exists()){
+                newImage.delete();
+            }
+
+            try {
+                FileOutputStream out = new FileOutputStream(newImage);
+                result.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                out.flush();
+                out.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
