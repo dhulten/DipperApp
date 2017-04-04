@@ -14,6 +14,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.client.utils.DateUtils;
 import org.joda.time.Period;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -54,7 +55,14 @@ public class ViewHistoryActivity extends AppCompatActivity {
                     int timeDiffMs = tz.getOffset(cal.getTimeInMillis());
 
                     // to do: actually format as JSON for easier parsing
-                    String responsePlaintext = new String(responseBody, "UTF-8"); // for UTF-8 encoding
+                    String responsePlaintext = new String(responseBody); // for UTF-8 encoding
+                    JSONObject jsonObject = new JSONObject(new String(responseBody));
+                    String checkinData = jsonObject.getString("Data");
+                    JSONObject checkinObject = new JSONObject(new String(responseBody));
+                    JSONArray dateArray = checkinObject.getJSONArray("CheckinDates");
+
+                    // to do: actually use this dateArray instead of clean text
+                    
                     String cleanResponseText = responsePlaintext.replace("[", "");
                     cleanResponseText = cleanResponseText.replace("]", "");
                     cleanResponseText = cleanResponseText.replace("\\", "");
@@ -82,6 +90,7 @@ public class ViewHistoryActivity extends AppCompatActivity {
                 }
                 catch (Exception ex)
                 {
+                    String a = "a";
                 }
 
             }
