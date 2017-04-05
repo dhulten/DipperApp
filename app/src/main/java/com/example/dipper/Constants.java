@@ -10,6 +10,8 @@ public class Constants {
     public static final String GetCheckins = "GetCheckins";
     public static final String Action = "Action";
     public static final String Result = "Result";
+    public static final String UploadImage = "UploadImage";
+    public static final String ImageBytes = "ImageBytes";
     public static final String ImageUrl = "http://52.41.79.4/image.jpg";
     public static final String LocalImageName = "/image.jpg";
     public static final String Data = "Data";

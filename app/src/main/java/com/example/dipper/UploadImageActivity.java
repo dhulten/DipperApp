@@ -2,16 +2,24 @@ package com.example.dipper;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import java.io.File;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import cz.msebera.android.httpclient.Header;
 
 public class UploadImageActivity extends AppCompatActivity {
 
@@ -31,8 +39,8 @@ public class UploadImageActivity extends AppCompatActivity {
         }
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
 
-        int maxWidth = 333;
-        int maxHeight = 400;
+        int maxWidth = 999;
+        int maxHeight = 1200;
 
         int heightDiff = myBitmap.getHeight() / maxHeight;
         int widthDiff = myBitmap.getWidth() / maxWidth;
@@ -51,5 +59,34 @@ public class UploadImageActivity extends AppCompatActivity {
         }
 
         imageView.setImageBitmap(scaledImage);
+    }
+
+    public void Upload(View view){
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        Bitmap bm = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+        byte[] byteArrayImage = baos.toByteArray();
+
+        String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader(Constants.Action, Constants.UploadImage);
+
+        RequestParams params = new RequestParams(Constants.ImageBytes, encodedImage);
+
+        findViewById(R.id.resultMessage).setVisibility(View.VISIBLE);
+        findViewById(R.id.imageView).setVisibility(View.INVISIBLE);
+
+        client.post(Constants.ApiUrl, params, new AsyncHttpResponseHandler(){
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                ((TextView)findViewById(R.id.resultMessage)).append("Upload success!");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                ((TextView)findViewById(R.id.resultMessage)).append(error.getMessage());
+            }
+        });
     }
 }
