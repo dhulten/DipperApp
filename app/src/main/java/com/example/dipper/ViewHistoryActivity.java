@@ -54,43 +54,29 @@ public class ViewHistoryActivity extends AppCompatActivity {
                     TimeZone tz = cal.getTimeZone();
                     int timeDiffMs = tz.getOffset(cal.getTimeInMillis());
 
-                    // to do: actually format as JSON for easier parsing
-                    String responsePlaintext = new String(responseBody); // for UTF-8 encoding
                     JSONObject jsonObject = new JSONObject(new String(responseBody));
-                    String checkinData = jsonObject.getString("Data");
-                    JSONObject checkinObject = new JSONObject(new String(responseBody));
-                    JSONArray dateArray = checkinObject.getJSONArray("CheckinDates");
+                    String dataStr = jsonObject.getString(Constants.Data);
+                    JSONArray dataArr = new JSONArray(dataStr);
 
-                    // to do: actually use this dateArray instead of clean text
-                    
-                    String cleanResponseText = responsePlaintext.replace("[", "");
-                    cleanResponseText = cleanResponseText.replace("]", "");
-                    cleanResponseText = cleanResponseText.replace("\\", "");
-                    cleanResponseText = cleanResponseText.replace(",","");
-                    String[] checkinTimes = cleanResponseText.split("\"");
+                    for (int i = 0; i < dataArr.length(); i++) {
+                        JSONObject checkinTimeJson = dataArr.getJSONObject(i);
+                        String checkinTimeStr = checkinTimeJson.getString(Constants.DateStr);
+                        Date checkinTime = inputFormat.parse(checkinTimeStr);
 
-                    int textViewCounter = -1;
-                    for (int i = 0; i < checkinTimes.length; i++) {
-                        if (checkinTimes[i].length() > 0) {
-                            textViewCounter++;
-                            Date checkinTime = inputFormat.parse(checkinTimes[i]);
+                        Calendar utcCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                        utcCal.setTime(checkinTime);
+                        utcCal.add(Calendar.MILLISECOND, timeDiffMs);
 
-                            Calendar utcCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                            utcCal.setTime(checkinTime);
-                            utcCal.add(Calendar.MILLISECOND, timeDiffMs);
+                        long secs = (currentTime.getTime() - utcCal.getTime().getTime()) / 1000;
+                        long hours = secs / 3600;
+                        String formattedCheckin = outputFormat.format(utcCal.getTime());
 
-                            long secs = (currentTime.getTime() - utcCal.getTime().getTime()) / 1000;
-                            long hours = secs / 3600;
-                            String formattedCheckin = outputFormat.format(utcCal.getTime());
-
-                            String checkinStr = formattedCheckin + " (" + hours + " hrs ago)";
-                            textViews[textViewCounter].append(checkinStr);
-                        }
+                        String checkinStr = formattedCheckin + " (" + hours + " hrs ago)";
+                        textViews[i].append(checkinStr);
                     }
                 }
                 catch (Exception ex)
                 {
-                    String a = "a";
                 }
 
             }

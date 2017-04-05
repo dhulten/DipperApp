@@ -12,4 +12,6 @@ public class Constants {
     public static final String Result = "Result";
     public static final String ImageUrl = "http://52.41.79.4/image.jpg";
     public static final String LocalImageName = "/image.jpg";
+    public static final String Data = "Data";
+    public static final String DateStr = "DateStr";
 }
