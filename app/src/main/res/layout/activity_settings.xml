@@ -58,37 +58,6 @@
                 android:layout_centerHorizontal="true" />
 
             <TextView
-                android:id="@+id/checkinIntervalHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/pushNotificationsSwitch"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:background="@color/darkBlue"
-                android:text="Check in interval (hrs): "
-                android:textAlignment="center"
-                android:textColor="@color/gold"
-                android:textSize="24sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pushNotificationsSwitch" />
-
-            <EditText
-                android:id="@+id/checkinIntervalVal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/checkinIntervalHeader"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:background="@color/darkBlue"
-                android:ems="10"
-                android:inputType="number"
-                android:text="28"
-                android:textAlignment="center"
-                android:textColor="@color/gold"
-                android:textSize="24sp" />
-
-
-            <TextView
                 android:id="@+id/alertTimeHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -97,7 +66,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/gold"
                 android:textSize="24sp"
-                android:layout_below="@+id/checkinIntervalVal"
+                android:layout_below="@+id/pushNotificationsSwitch"
                 android:layout_marginTop="30dp"
                 android:layout_centerHorizontal="true" />
 
@@ -111,12 +80,26 @@
                 android:background="@color/darkBlue"
                 android:ems="10"
                 android:inputType="number"
-                android:text="60"
+                android:text=""
                 android:textAlignment="center"
                 android:textColor="@color/gold"
                 android:textSize="24sp"
                 android:layout_below="@+id/alertTimeHeader"
                 android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/saveResults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/darkBlue"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/gold"
+                android:textSize="24sp"
+                android:visibility="invisible"
+                android:layout_below="@+id/alertTimeVal"
+                android:layout_marginTop="30dp"
+                android:layout_centerHorizontal="true" />
 
             <Button
                 android:id="@+id/saveButton"
@@ -127,6 +110,7 @@
                 android:layout_marginBottom="64dp"
                 android:background="@color/darkBlue"
                 android:text="Save changes"
+                android:onClick="saveSettings"
                 android:textColor="@color/gold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

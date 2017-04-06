@@ -25,21 +25,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Switch
-                android:id="@+id/pushNotificationsSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/settingsHeader"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="41dp"
-                android:background="@color/darkBlue"
-                android:text="Push notifications"
-                android:textAlignment="center"
-                android:textColor="@color/gold"
-                android:textSize="24dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/settingsHeader" />
-
             <TextView
                 android:id="@+id/settingsHeader"
                 android:layout_width="wrap_content"
@@ -59,40 +44,36 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <Switch
+                android:id="@+id/pushNotificationsSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/settingsHeader"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="41dp"
+                android:background="@color/darkBlue"
+                android:text="Push notifications"
+                android:textAlignment="center"
+                android:textColor="@color/gold"
+                android:textSize="24dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/settingsHeader" />
 
-            <TextView
-                android:id="@+id/checkinIntervalHeader"
+            <Switch
+                android:id="@+id/adminModeSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/pushNotificationsSwitch"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="41dp"
                 android:background="@color/darkBlue"
-                android:text="Check in interval (hrs): "
+                android:text="Admin mode"
                 android:textAlignment="center"
                 android:textColor="@color/gold"
-                android:textSize="24sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pushNotificationsSwitch" />
+                android:textSize="24dp"
+                app:layout_constraintLeft_toLeftOf="parent" />
 
 
-            <EditText
-                android:id="@+id/checkinIntervalVal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/checkinIntervalHeader"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="18dp"
-                android:background="@color/darkBlue"
-                android:ems="10"
-                android:inputType="number"
-                android:text="28"
-                android:textAlignment="center"
-                android:textColor="@color/gold"
-                android:textSize="24sp"
-                app:layout_constraintHorizontal_bias="0.523"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkinIntervalHeader" />
 
             <Button
                 android:id="@+id/saveButton"
