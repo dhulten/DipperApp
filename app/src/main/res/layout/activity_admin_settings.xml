@@ -92,16 +92,32 @@
                 android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="64dp"
                 android:background="@color/darkBlue"
                 android:text="Save changes"
                 android:onClick="saveSettings"
                 android:textColor="@color/gold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_below="@+id/saveResults"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="41dp" />
+
+            <Button
+                android:id="@+id/pushTest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="53dp"
+                android:background="@color/darkBlue"
+                android:text="Test Push"
+                android:onClick="testPush"
+                android:textColor="@color/gold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
+
         </RelativeLayout>
     </FrameLayout>
 </android.support.constraint.ConstraintLayout>
