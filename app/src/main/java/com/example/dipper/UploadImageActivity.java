@@ -37,7 +37,7 @@ public class UploadImageActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        ImageView imageView = (ImageView) findViewById(R.id.uploadImage);
 
         int maxWidth = 999;
         int maxHeight = 1200;
@@ -62,7 +62,7 @@ public class UploadImageActivity extends AppCompatActivity {
     }
 
     public void Upload(View view){
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        ImageView imageView = (ImageView) findViewById(R.id.uploadImage);
         Bitmap bm = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
@@ -76,7 +76,7 @@ public class UploadImageActivity extends AppCompatActivity {
         RequestParams params = new RequestParams(Constants.ImageBytes, encodedImage);
 
         findViewById(R.id.resultMessage).setVisibility(View.VISIBLE);
-        findViewById(R.id.imageView).setVisibility(View.INVISIBLE);
+        findViewById(R.id.uploadImage).setVisibility(View.INVISIBLE);
 
         client.post(Constants.ApiUrl, params, new AsyncHttpResponseHandler(){
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -88,5 +88,10 @@ public class UploadImageActivity extends AppCompatActivity {
                 ((TextView)findViewById(R.id.resultMessage)).append(error.getMessage());
             }
         });
+    }
+
+    public void viewSettings(View view){
+        Intent i = new Intent(this, AdminSettingsActivity.class);
+        startActivity(i);
     }
 }

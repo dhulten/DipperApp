@@ -34,7 +34,7 @@ public class DisplayImageActivity extends AppCompatActivity {
         client.post(Constants.ApiUrl, null, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    findViewById(R.id.imageView).setVisibility(View.VISIBLE);
+                    findViewById(R.id.displayImage).setVisibility(View.VISIBLE);
 
                     File cacheDir = getApplicationContext().getCacheDir();
                     File cachedImage = new File(cacheDir.getPath() + Constants.LocalImageName);
@@ -52,14 +52,14 @@ public class DisplayImageActivity extends AppCompatActivity {
 
                     if (!cachedImage.exists() || newImage)
                     {
-                        new DownloadImageTask((ImageView) findViewById(R.id.imageView))
+                        new DownloadImageTask((ImageView) findViewById(R.id.displayImage))
                                 .execute(Constants.ImageUrl);
                     }
                     else
                     {
 
                         Bitmap image = BitmapFactory.decodeFile(cachedImage.getAbsolutePath());
-                        ImageView imageView = (ImageView)findViewById(R.id.imageView);
+                        ImageView imageView = (ImageView)findViewById(R.id.displayImage);
                         imageView.setImageBitmap(image);
                     }
                 }
@@ -68,7 +68,7 @@ public class DisplayImageActivity extends AppCompatActivity {
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                     findViewById(R.id.errorMessage1).setVisibility(View.VISIBLE);
                     findViewById(R.id.errorMessage2).setVisibility(View.VISIBLE);
-                    findViewById(R.id.imageView).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.displayImage).setVisibility(View.INVISIBLE);
                 }
         });
     }
@@ -96,15 +96,15 @@ public class DisplayImageActivity extends AppCompatActivity {
 
         protected Bitmap doInBackground(String... urls) {
             String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
+            Bitmap resultImage = null;
             try {
                 InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
+                resultImage = BitmapFactory.decodeStream(in);
+            } catch (Exception ex) {
+                Log.e("Error", ex.getMessage());
+                ex.printStackTrace();
             }
-            return mIcon11;
+            return resultImage;
         }
 
         protected void onPostExecute(Bitmap result) {

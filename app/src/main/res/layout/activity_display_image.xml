@@ -13,7 +13,7 @@
         app:layout_constraintLeft_toLeftOf="parent">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/backgroundImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -69,7 +69,7 @@
 
 
             <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/displayImage"
             android:layout_width="333dp"
             android:layout_height="475dp"
             android:visibility="invisible"
