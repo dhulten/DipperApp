@@ -15,7 +15,7 @@
         app:layout_constraintLeft_toLeftOf="parent">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/backgroundImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -74,6 +74,19 @@
                 app:layout_constraintLeft_toLeftOf="parent" />
 
 
+            <TextView
+                android:id="@+id/saveResults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/darkBlue"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/gold"
+                android:textSize="24sp"
+                android:visibility="invisible"
+                android:layout_below="@+id/adminModeSwitch"
+                android:layout_marginTop="30dp"
+                android:layout_centerHorizontal="true" />
 
             <Button
                 android:id="@+id/saveButton"
@@ -84,6 +97,7 @@
                 android:layout_marginBottom="64dp"
                 android:background="@color/darkBlue"
                 android:text="Save changes"
+                android:onClick="saveSettings"
                 android:textColor="@color/gold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

@@ -28,6 +28,9 @@ public class DisplayImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_image);
 
+        LinearLayout linlaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
+        linlaHeaderProgress.setVisibility(View.VISIBLE);
+
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader(Constants.Action, Constants.Checkin);
 
@@ -57,6 +60,8 @@ public class DisplayImageActivity extends AppCompatActivity {
                     }
                     else
                     {
+                        LinearLayout linlaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
+                        linlaHeaderProgress.setVisibility(View.GONE);
 
                         Bitmap image = BitmapFactory.decodeFile(cachedImage.getAbsolutePath());
                         ImageView imageView = (ImageView)findViewById(R.id.displayImage);
@@ -78,16 +83,6 @@ public class DisplayImageActivity extends AppCompatActivity {
 
         // CAST THE LINEARLAYOUT HOLDING THE MAIN PROGRESS (SPINNER)
         LinearLayout linlaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
-
-        /** progress dialog to show user that the backup is processing. */
-        /**
-         * application context.
-         */
-        @Override
-        protected void onPreExecute() {
-            // SHOW THE SPINNER WHILE LOADING FEEDS
-            linlaHeaderProgress.setVisibility(View.VISIBLE);
-        }
 
         public DownloadImageTask(ImageView bmImage) {
             this.bmImage = bmImage;

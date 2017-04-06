@@ -62,6 +62,8 @@ public class UploadImageActivity extends AppCompatActivity {
     }
 
     public void Upload(View view){
+        findViewById(R.id.pbHeaderProgress).setVisibility(View.VISIBLE);
+
         ImageView imageView = (ImageView) findViewById(R.id.uploadImage);
         Bitmap bm = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -81,11 +83,13 @@ public class UploadImageActivity extends AppCompatActivity {
         client.post(Constants.ApiUrl, params, new AsyncHttpResponseHandler(){
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 ((TextView)findViewById(R.id.resultMessage)).append("Upload success!");
+                findViewById(R.id.pbHeaderProgress).setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 ((TextView)findViewById(R.id.resultMessage)).append(error.getMessage());
+                findViewById(R.id.pbHeaderProgress).setVisibility(View.INVISIBLE);
             }
         });
     }
