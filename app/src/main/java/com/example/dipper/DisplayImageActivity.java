@@ -77,6 +77,9 @@ public class DisplayImageActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    LinearLayout linlaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
+                    linlaHeaderProgress.setVisibility(View.GONE);
+
                     findViewById(R.id.errorMessage1).setVisibility(View.VISIBLE);
                     findViewById(R.id.errorMessage2).setVisibility(View.VISIBLE);
                     findViewById(R.id.displayImage).setVisibility(View.INVISIBLE);
