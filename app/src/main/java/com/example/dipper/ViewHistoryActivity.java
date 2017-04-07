@@ -51,8 +51,8 @@ public class ViewHistoryActivity extends AppCompatActivity {
                             (TextView)findViewById(R.id.checkin5),
                     };
 
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("MM-dd HH:mm");
+                    SimpleDateFormat inputFormat = new SimpleDateFormat(Constants.LongDateFormat);
+                    SimpleDateFormat outputFormat = new SimpleDateFormat(Constants.ShortDateFormat);
                     Calendar cal = Calendar.getInstance();
                     Date currentTime = cal.getTime();
                     TimeZone tz = cal.getTimeZone();

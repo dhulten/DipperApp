@@ -19,6 +19,10 @@ import com.loopj.android.http.RequestHandle;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -72,6 +76,20 @@ public class DisplayImageActivity extends AppCompatActivity {
                         Bitmap image = BitmapFactory.decodeFile(cachedImage.getAbsolutePath());
                         ImageView imageView = (ImageView)findViewById(R.id.displayImage);
                         imageView.setImageBitmap(image);
+                    }
+
+                    SharedPreferences settings = getApplicationContext().getSharedPreferences(Constants.Preferences, 0);
+                    Boolean adminMode = settings.getBoolean(Constants.AdminModeKey, false);
+
+                    // log most recent checkin time
+                    if (!adminMode) {
+                        SimpleDateFormat outputFormat = new SimpleDateFormat(Constants.LongDateFormat);
+                        Calendar utcCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                        Date currentTime = utcCal.getTime();
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(Constants.LastLocalCheckinKey, outputFormat.format(currentTime));
+                        editor.apply();
                     }
                 }
 

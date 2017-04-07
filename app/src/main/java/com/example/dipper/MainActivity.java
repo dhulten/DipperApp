@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        scheduleNotification(5000);
+        scheduleNotification(120000);
     }
 
 
@@ -52,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
         long futureInMillis = SystemClock.elapsedRealtime() + delay;
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME, futureInMillis, pendingIntent);
+        //alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
 
-        //alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
-        //      SystemClock.elapsedRealtime(),
-        //    AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
+              SystemClock.elapsedRealtime(),
+            AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
     }
 }
