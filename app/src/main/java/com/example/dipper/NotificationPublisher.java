@@ -47,9 +47,6 @@ public class NotificationPublisher extends BroadcastReceiver {
 
         if (pushNotifications) {
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.LongDateFormat);
-            Calendar utcCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-
             if (adminMode) {
                 AsyncHttpClient client = new AsyncHttpClient();
                 client.addHeader(Constants.Action, Constants.GetCheckins);
@@ -106,8 +103,11 @@ public class NotificationPublisher extends BroadcastReceiver {
                 });
 
             } else {
+                SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.LongDateFormat);
+                Calendar utcCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 Notification notification;
                 String lastCheckinStr = settings.getString(Constants.LastLocalCheckinKey, "");
+
                 boolean notificationNeeded = true;
 
                 if (lastCheckinStr.length() == 0) {
@@ -136,7 +136,7 @@ public class NotificationPublisher extends BroadcastReceiver {
                     }
                 }
 
-                // prevents notifications if the time parameters haven't been met
+                // prevents notifications if the time requirements haven't been met
                 if (notificationNeeded) {
                     int id = intent.getIntExtra(NOTIFICATION_ID, 0);
                     notificationManager.notify(id, notification);
