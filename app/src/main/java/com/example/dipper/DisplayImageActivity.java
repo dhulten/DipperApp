@@ -1,5 +1,6 @@
 package com.example.dipper;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -31,8 +32,13 @@ public class DisplayImageActivity extends AppCompatActivity {
         LinearLayout linlaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
         linlaHeaderProgress.setVisibility(View.VISIBLE);
 
+        SharedPreferences settings = getApplicationContext().getSharedPreferences(Constants.Preferences, 0);
+        Boolean adminMode = settings.getBoolean(Constants.AdminModeKey, false);
+        String checkinMode = adminMode ? Constants.AdminMode : Constants.UserMode;
+
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader(Constants.Action, Constants.Checkin);
+        client.addHeader(Constants.CheckinMode, checkinMode);
 
         client.post(Constants.ApiUrl, null, new AsyncHttpResponseHandler() {
                 @Override
