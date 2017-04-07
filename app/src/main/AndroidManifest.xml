@@ -41,7 +41,9 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".AdminSettingsActivity"></activity>
+        <activity android:name=".AdminSettingsActivity"
+            android:screenOrientation="portrait" />
+        <receiver android:name=".NotificationPublisher" />
     </application>
 
 </manifest>
