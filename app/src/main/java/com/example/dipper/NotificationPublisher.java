@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -44,10 +46,13 @@ public class NotificationPublisher extends BroadcastReceiver {
         boolean pushNotifications = adminMode ? settings.getBoolean(Constants.AdminPushNotificationsKey, true)
                 : settings.getBoolean(Constants.UserPushNotificationsKey, true);
 
+        Calendar rightNow = Calendar.getInstance();
+        int hour = rightNow.get(Calendar.HOUR_OF_DAY);
 
-        if (pushNotifications) {
+        // only send notifications during waking hours
+        if (pushNotifications && hour >= 6 && hour < 22) {
 
-            if (adminMode) {
+            if (adminMode && isNetworkAvailable(context)) {
                 AsyncHttpClient client = new AsyncHttpClient();
                 client.addHeader(Constants.Action, Constants.GetCheckins);
 
@@ -155,5 +160,12 @@ public class NotificationPublisher extends BroadcastReceiver {
                 notificationIntent, 0);
         builder.setContentIntent(pendingIntent);
         return builder.build();
+    }
+
+    private boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
