@@ -90,12 +90,27 @@ public class NotificationPublisher extends BroadcastReceiver {
                                 int id = intent.getIntExtra(NOTIFICATION_ID, 0);
                                 notificationManager.notify(id, notification);
                             }
+
+                            // reset current number of consecutive admin failures to 0
+                            SharedPreferences settings = context.getSharedPreferences(Constants.Preferences, 0);
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putInt(Constants.AdminFailuresKey, 0);
+                            editor.apply();
                         }
                         catch (Exception ex)
                         {
-                            Notification notification = getNotification("Check-in Alert Error", ex.getMessage(), context, ViewHistoryActivity.class);
-                            int id = intent.getIntExtra(NOTIFICATION_ID, 0);
-                            notificationManager.notify(id, notification);
+                            SharedPreferences settings = context.getSharedPreferences(Constants.Preferences, 0);
+                            SharedPreferences.Editor editor = settings.edit();
+                            int currentFailureCount = settings.getInt(Constants.AdminFailuresKey, 0);
+
+                            if (currentFailureCount > Constants.MaxConsecutiveAdminFailures) {
+                                Notification notification = getNotification(currentFailureCount + " consequtive alert failures", ex.getMessage(), context, ViewHistoryActivity.class);
+                                int id = intent.getIntExtra(NOTIFICATION_ID, 0);
+                                notificationManager.notify(id, notification);
+                            }
+
+                            editor.putInt(Constants.AdminFailuresKey, currentFailureCount + 1);
+                            editor.apply();
                         }
                     }
 

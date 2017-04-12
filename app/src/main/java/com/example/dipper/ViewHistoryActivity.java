@@ -75,7 +75,7 @@ public class ViewHistoryActivity extends AppCompatActivity {
                         long hours = secs / 3600;
                         String formattedCheckin = outputFormat.format(utcCal.getTime());
 
-                        String checkinStr = formattedCheckin + " (" + hours + " hrs ago)";
+                        String checkinStr = i == 0 ? formattedCheckin + " (" + hours + " hrs ago)" : formattedCheckin;
                         textViews[i].append(checkinStr);
                     }
                 }
