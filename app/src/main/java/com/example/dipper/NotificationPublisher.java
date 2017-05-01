@@ -169,6 +169,7 @@ public class NotificationPublisher extends BroadcastReceiver {
         Notification.Builder builder = new Notification.Builder(context);
         builder.setContentTitle(title);
         builder.setContentText(content);
+        builder.setAutoCancel(true);
         builder.setSmallIcon(R.drawable.notification);
         Intent notificationIntent = new Intent(context, targetClass);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,

@@ -23,7 +23,7 @@ public class Constants {
     public static final String LongDateFormat = "yyyy-MM-dd HH:mm";
     public static final int AdminAlertTimeMinutes = 1620;// 27 hours allow some wiggle room on user checkin in before push alert
     public static final int UserCheckinWindowMinutes = 1560;// 26 hours checkin should be daily but allow for small changes in time
-    public static final int MaxConsecutiveAdminFailures = 2;
+    public static final int MaxConsecutiveAdminFailures = 1;
     public static final String Preferences = "Preferences";
     public static final String UserPushNotificationsKey = "UserPushNotificationsKey";
     public static final String AdminPushNotificationsKey = "AdminPushNotificationsKey";
