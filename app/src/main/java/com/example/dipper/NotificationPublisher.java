@@ -52,76 +52,77 @@ public class NotificationPublisher extends BroadcastReceiver {
         // only send notifications during waking hours
         if (pushNotifications && hour >= 6 && hour < 22) {
 
-            if (adminMode && isNetworkAvailable(context)) {
-                AsyncHttpClient client = new AsyncHttpClient();
-                client.addHeader(Constants.Action, Constants.GetCheckins);
+            if (adminMode) {
+                // do not attempt to update if network is unavailable
+                if (isNetworkAvailable(context)) {
 
-                client.get(Constants.ApiUrl, null, new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        try {
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    client.addHeader(Constants.Action, Constants.GetCheckins);
 
-                            SimpleDateFormat inputFormat = new SimpleDateFormat(Constants.LongDateFormat);
-                            SimpleDateFormat outputFormat = new SimpleDateFormat(Constants.ShortDateFormat);
-                            Calendar cal = Calendar.getInstance();
-                            Date currentTime = cal.getTime();
-                            TimeZone tz = cal.getTimeZone();
-                            int timeDiffMs = tz.getOffset(cal.getTimeInMillis());
+                    client.get(Constants.ApiUrl, null, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            try {
 
-                            JSONObject jsonObject = new JSONObject(new String(responseBody));
-                            String dataStr = jsonObject.getString(Constants.Data);
-                            JSONArray dataArr = new JSONArray(dataStr);
-                            JSONObject mostRecentCheckin = dataArr.getJSONObject(0);
+                                SimpleDateFormat inputFormat = new SimpleDateFormat(Constants.LongDateFormat);
+                                SimpleDateFormat outputFormat = new SimpleDateFormat(Constants.ShortDateFormat);
+                                Calendar cal = Calendar.getInstance();
+                                Date currentTime = cal.getTime();
+                                TimeZone tz = cal.getTimeZone();
+                                int timeDiffMs = tz.getOffset(cal.getTimeInMillis());
 
-                            String checkinTimeStr = mostRecentCheckin.getString(Constants.DateStr);
-                            Date checkinTime = inputFormat.parse(checkinTimeStr);
+                                JSONObject jsonObject = new JSONObject(new String(responseBody));
+                                String dataStr = jsonObject.getString(Constants.Data);
+                                JSONArray dataArr = new JSONArray(dataStr);
+                                JSONObject mostRecentCheckin = dataArr.getJSONObject(0);
 
-                            Calendar comparisonCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                            comparisonCalendar.setTime(checkinTime);
-                            comparisonCalendar.add(Calendar.MILLISECOND, timeDiffMs);
+                                String checkinTimeStr = mostRecentCheckin.getString(Constants.DateStr);
+                                Date checkinTime = inputFormat.parse(checkinTimeStr);
 
-                            long secsSinceCheckin = (currentTime.getTime() - comparisonCalendar.getTime().getTime()) / 1000;
-                            long minutesSinceCheckin = secsSinceCheckin / 60;
+                                Calendar comparisonCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                                comparisonCalendar.setTime(checkinTime);
+                                comparisonCalendar.add(Calendar.MILLISECOND, timeDiffMs);
 
-                            String formattedCheckin = outputFormat.format(comparisonCalendar.getTime());
+                                long secsSinceCheckin = (currentTime.getTime() - comparisonCalendar.getTime().getTime()) / 1000;
+                                long minutesSinceCheckin = secsSinceCheckin / 60;
 
-                            if (minutesSinceCheckin > Constants.AdminAlertTimeMinutes) {
-                                Notification notification = getNotification("Check-in alert", "Last checkin: " + formattedCheckin, context, ViewHistoryActivity.class);
-                                int id = intent.getIntExtra(NOTIFICATION_ID, 0);
-                                notificationManager.notify(id, notification);
+                                String formattedCheckin = outputFormat.format(comparisonCalendar.getTime());
+
+                                if (minutesSinceCheckin > Constants.AdminAlertTimeMinutes) {
+                                    Notification notification = getNotification("Check-in alert", "Last checkin: " + formattedCheckin, context, ViewHistoryActivity.class);
+                                    int id = intent.getIntExtra(NOTIFICATION_ID, 0);
+                                    notificationManager.notify(id, notification);
+                                }
+
+                                // reset current number of consecutive admin failures to 0
+                                SharedPreferences settings = context.getSharedPreferences(Constants.Preferences, 0);
+                                SharedPreferences.Editor editor = settings.edit();
+                                editor.putInt(Constants.AdminFailuresKey, 0);
+                                editor.apply();
+                            } catch (Exception ex) {
+                                SharedPreferences settings = context.getSharedPreferences(Constants.Preferences, 0);
+                                SharedPreferences.Editor editor = settings.edit();
+                                int currentFailureCount = settings.getInt(Constants.AdminFailuresKey, 0);
+
+                                if (currentFailureCount > Constants.MaxConsecutiveAdminFailures) {
+                                    Notification notification = getNotification(currentFailureCount + " consequtive alert failures", ex.getMessage(), context, ViewHistoryActivity.class);
+                                    int id = intent.getIntExtra(NOTIFICATION_ID, 0);
+                                    notificationManager.notify(id, notification);
+                                }
+
+                                editor.putInt(Constants.AdminFailuresKey, currentFailureCount + 1);
+                                editor.apply();
                             }
-
-                            // reset current number of consecutive admin failures to 0
-                            SharedPreferences settings = context.getSharedPreferences(Constants.Preferences, 0);
-                            SharedPreferences.Editor editor = settings.edit();
-                            editor.putInt(Constants.AdminFailuresKey, 0);
-                            editor.apply();
                         }
-                        catch (Exception ex)
-                        {
-                            SharedPreferences settings = context.getSharedPreferences(Constants.Preferences, 0);
-                            SharedPreferences.Editor editor = settings.edit();
-                            int currentFailureCount = settings.getInt(Constants.AdminFailuresKey, 0);
 
-                            if (currentFailureCount > Constants.MaxConsecutiveAdminFailures) {
-                                Notification notification = getNotification(currentFailureCount + " consequtive alert failures", ex.getMessage(), context, ViewHistoryActivity.class);
-                                int id = intent.getIntExtra(NOTIFICATION_ID, 0);
-                                notificationManager.notify(id, notification);
-                            }
-
-                            editor.putInt(Constants.AdminFailuresKey, currentFailureCount + 1);
-                            editor.apply();
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Notification notification = getNotification("Check-in Alert Error", error.getMessage(), context, ViewHistoryActivity.class);
+                            int id = intent.getIntExtra(NOTIFICATION_ID, 0);
+                            notificationManager.notify(id, notification);
                         }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        Notification notification = getNotification("Check-in Alert Error", error.getMessage(), context, ViewHistoryActivity.class);
-                        int id = intent.getIntExtra(NOTIFICATION_ID, 0);
-                        notificationManager.notify(id, notification);
-                    }
-                });
-
+                    });
+                }
             } else {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.LongDateFormat);
                 Calendar utcCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
